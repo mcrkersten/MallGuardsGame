@@ -74,7 +74,7 @@ public class MallGenerator : MonoBehaviour
         InitPathfindGrid();
         SpawnFurniture();
         SetPathfinderGridValues();
-        DebugCubes();
+        //DebugCubes();
         //PlacePlayerInMall(); //TO-DO
     }
 
@@ -143,11 +143,11 @@ public class MallGenerator : MonoBehaviour
         List<PathPoint> pl = pathfindingNodeManager.ReturnNavPointList();
         foreach (PathPoint p in pl) {
             if (p.GetNode == PathfindNode.Walkable) {
-                //GameObject s = SpawnObjectForMall(debugBox,
-                //    new Vector3(p.GetPosition().x, 0, p.GetPosition().y),
-                //    Quaternion.LookRotation(new Vector3(0, 0, 1)),
-                //    TexturePicker.Instance.GetHallwayWallTexture());
-                //s.GetComponent<Renderer>().material.color = new Color(0, 255, 0);
+                GameObject s = SpawnObjectForMall(debugBox,
+                    new Vector3(p.GetPosition.x, 0, p.GetPosition.y),
+                    Quaternion.LookRotation(new Vector3(0, 0, 1)),
+                    TexturePicker.Instance.GetHallwayWallTexture());
+                s.GetComponent<Renderer>().material.color = new Color(0, 255, 0);
             }
             else if(p.GetNode == PathfindNode.Nonwalkable) {
                 GameObject s = SpawnObjectForMall(debugBox,
@@ -537,6 +537,7 @@ public class MallGenerator : MonoBehaviour
 
     private void SpawnFurniture() {
         StoreFurnitureSpawner.SpawnBookStore(2);
+        StoreFurnitureSpawner.SpawnDrycleaning(1);
     }
 
 }

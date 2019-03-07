@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4366757, g: 0.48427194, b: 0.5645252, a: 1}
+  m_IndirectSpecularColor: {r: 0.43667546, g: 0.48427135, b: 0.5645225, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -432,38 +432,6 @@ PrefabInstance:
       objectReference: {fileID: 1384298984}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e2269e8bc80d2ee4592ef04623825a28, type: 3}
---- !u!84 &1605855845
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_Width: 4096
-  m_Height: 4096
-  m_AntiAliasing: 1
-  m_DepthFormat: 0
-  m_ColorFormat: 14
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
 --- !u!1 &1688571205
 GameObject:
   m_ObjectHideFlags: 0
@@ -500,8 +468,8 @@ MonoBehaviour:
   scaleFactor: 1
   plazaSize: {x: 5, y: 5}
   halwayLenght: {x: 7, y: 7}
-  storeWidth: {x: 3, y: 7}
-  storeHeight: {x: 3, y: 7}
+  storeWidth: {x: 5, y: 5}
+  storeHeight: {x: 5, y: 5}
   debugBox: {fileID: 8736626789500390188, guid: ab64ac84a6086384685007e7f2f2eff9,
     type: 3}
   StoreFurnitureSpawner: {fileID: 1688571208}
@@ -534,7 +502,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac298572eeacfa345bc26b160894d49e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bookStoreFurniture: []
+  storeFurniture: []
   registers: []
   mallGenerator: {fileID: 1688571206}
   storeDecoration: []
+--- !u!84 &2026976285
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_Width: 4096
+  m_Height: 4096
+  m_AntiAliasing: 1
+  m_DepthFormat: 0
+  m_ColorFormat: 14
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1

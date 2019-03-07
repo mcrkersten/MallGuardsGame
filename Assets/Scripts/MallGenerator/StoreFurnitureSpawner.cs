@@ -6,7 +6,7 @@ using System.Linq;
 public class StoreFurnitureSpawner : MonoBehaviour
 {
     private PathfindingNodeManager pathfindingNodeManager;
-    public GameObject[] bookStoreFurniture;
+    public GameObject[] storeFurniture;
     public GameObject[] registers;
     public MallGenerator mallGenerator;
 
@@ -16,7 +16,7 @@ public class StoreFurnitureSpawner : MonoBehaviour
     public void SpawnBookStore(int storeNumber) {
         //GetPrefabs
         registers = Resources.LoadAll<GameObject>("Register");
-        bookStoreFurniture = Resources.LoadAll<GameObject>("BookStore");
+        storeFurniture = Resources.LoadAll<GameObject>("BookStore");
 
         storeDecoration = Resources.LoadAll<GameObject>("StoreDecoration");
         pathfindingNodeManager = PathfindingNodeManager.Instance;
@@ -61,13 +61,55 @@ public class StoreFurnitureSpawner : MonoBehaviour
 
         //Set all furniture with funtions
         SetRegister(pointsInRoom, storeNumber);
-        SetFurnitureVerticalWall(bottomWall, bookStoreFurniture, storeNumber);
-        SetFurnitureVerticalWall(topWall, bookStoreFurniture, storeNumber);
-        SetFurnitureHorizontalWall(leftWall, bookStoreFurniture, storeNumber);
-        SetFurnitureHorizontalWall(rightWall, bookStoreFurniture, storeNumber);
+        SetFurnitureHorizontalWall(bottomWall, storeFurniture, storeNumber);
+        SetFurnitureHorizontalWall(topWall, storeFurniture, storeNumber);
+        SetFurnitureVerticalWall(leftWall, storeFurniture, storeNumber);
+        SetFurnitureVerticalWall(rightWall, storeFurniture, storeNumber);
     }
 
-    private void SetFurnitureVerticalWall(List<PathPoint> wall, GameObject[] furniture, int storeNumber) {
+    public void SpawnDrycleaning(int storeNumber)
+    {
+        //GetPrefabs
+        registers = Resources.LoadAll<GameObject>("Register");
+        storeFurniture = Resources.LoadAll<GameObject>("DryCleaningStore");
+
+        storeDecoration = Resources.LoadAll<GameObject>("StoreDecoration");
+        pathfindingNodeManager = PathfindingNodeManager.Instance;
+        List<PathPoint> pointsInRoom = new List<PathPoint>();
+
+        float stepsSize = (1 / mallGenerator.gridSize);
+        float gridSize = mallGenerator.gridSize;
+        float gridPercentage = (1 / gridSize);
+
+        //Get all points back from store
+        //List for all points in room.
+        foreach (PathPoint point in pathfindingNodeManager.ReturnNavPointList())
+        {
+            if (point.GetStoreNumber == storeNumber)
+            {
+                pointsInRoom.Add(point);
+            }
+        }
+
+        List<MallSpace> stores = mallGenerator.GetStoreSpaces;
+        MallSpace currentStore = stores[storeNumber];
+        Vector2 storeSize = currentStore.GetHeightWidthofRoom;
+
+        if (storeSize == new Vector2(5, 5))
+        {
+            SpawnObjectOnPlace(pointsInRoom, storeDecoration[1].GetComponent<FurnitureSpace>().size, new Vector2(1, 3), -90f, storeDecoration[1], storeNumber);
+            SpawnObjectOnPlace(pointsInRoom, storeDecoration[1].GetComponent<FurnitureSpace>().size, new Vector2(3, 3), 0, storeDecoration[1], storeNumber);
+        }
+
+        List<PathPoint> leftWall = GetLeftWall(pointsInRoom);
+        List<PathPoint> rightWall = GetRightWall(pointsInRoom);
+
+        SetFurnitureVerticalWall(leftWall, storeFurniture, storeNumber);
+        SetFurnitureVerticalWall(rightWall, storeFurniture, storeNumber);
+
+    }
+
+    private void SetFurnitureHorizontalWall(List<PathPoint> wall, GameObject[] furniture, int storeNumber) {
 
         float stepsSize = (1 / mallGenerator.gridSize);
         for (int xx = 0; xx < wall.Count; xx++) {
@@ -78,7 +120,7 @@ public class StoreFurnitureSpawner : MonoBehaviour
             }
 
             //try for lenght furniture;
-            for (int fur = 0; fur < bookStoreFurniture.Length; fur++) {
+            for (int fur = 0; fur < storeFurniture.Length; fur++) {
                 //Get Furniture and the x size.
                 int g = Random.Range(0, furniture.Length);
                 GameObject furniturePiece = furniture[g];
@@ -111,7 +153,7 @@ public class StoreFurnitureSpawner : MonoBehaviour
         }
     }
 
-    private void SetFurnitureHorizontalWall(List<PathPoint> wall, GameObject[] furniture, int storeNumber) {
+    private void SetFurnitureVerticalWall(List<PathPoint> wall, GameObject[] furniture, int storeNumber) {
         float stepsSize = (1 / mallGenerator.gridSize);
         for (int xx = 0; xx < wall.Count; xx++) {
 
@@ -121,7 +163,7 @@ public class StoreFurnitureSpawner : MonoBehaviour
             }
 
             //try for lenght furniture;
-            for (int fur = 0; fur < bookStoreFurniture.Length; fur++) {
+            for (int fur = 0; fur < storeFurniture.Length; fur++) {
                 //Get Furniture and the x size.
                 int g = Random.Range(0, furniture.Length);
                 GameObject furniturePiece = furniture[g];
@@ -131,7 +173,7 @@ public class StoreFurnitureSpawner : MonoBehaviour
                 //If furniture fits, place it.
                 if (TestPosition(testPosition, storeNumber) && TestPosition(wall[xx].GetPosition, storeNumber)) {
                     //If point behind furniture = wall
-                    if (!TestPosition(new Vector2(wall[xx].GetPosition.x - (stepsSize), wall[xx].GetPosition.y + (stepsSize)), storeNumber)) {
+                    if (!TestPosition(new Vector2(wall[xx].GetPosition.x - (stepsSize), wall[xx].GetPosition.y + (stepsSize * blocksX)), storeNumber)) {
                         mallGenerator.allGameObjectsMall.Add(Instantiate(furniture[g],
                             new Vector3(wall[xx].GetPosition.x, 0, wall[xx].GetPosition.y), Quaternion.Euler(0, -90, 0),
                             null));
@@ -218,6 +260,8 @@ public class StoreFurnitureSpawner : MonoBehaviour
         return false;
     }
 
+
+    //GET WALLS
     public List<PathPoint> GetLeftWall(List<PathPoint> points) {
         float xMin = points.Min(v => v.GetPosition.x);
         List<PathPoint> leftWall = new List<PathPoint>();
@@ -238,6 +282,20 @@ public class StoreFurnitureSpawner : MonoBehaviour
             }
         }
         return rightWall;
+    }
+
+    public List<PathPoint> GetCenterWallVertical(List<PathPoint> points)
+    {
+        float xCenter = points.Average(v => v.GetPosition.x);
+        List<PathPoint> centerWall = new List<PathPoint>();
+        for (int xx = 0; xx < points.Count; xx++)
+        {
+            if (points[xx].GetPosition.x == xCenter)
+            {
+                centerWall.Add(points[xx]);
+            }
+        }
+        return centerWall;
     }
 
     public List<PathPoint> GetBottomtWall(List<PathPoint> points) {
