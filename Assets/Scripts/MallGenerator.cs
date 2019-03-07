@@ -32,6 +32,7 @@ public class MallGenerator : MonoBehaviour
     private List<Tile[,]> stores = new List<Tile[,]>();
     private List<MallSpace> storeSpaces = new List<MallSpace>();
 
+
     private GameObject wall, door, hallwayFloor, storeFloor;
 
     private Tile[,] hallways;
@@ -45,6 +46,11 @@ public class MallGenerator : MonoBehaviour
     public List<GameObject> allGameObjectsMall = new List<GameObject>();
     private int plazaSizeWidth, plazaSizeHeight;
     public int storesOnHallway;
+
+    public List<MallSpace> GetStoreSpaces
+    {
+        get { return storeSpaces; }
+    }
 
     private void Start() {
         pathfindingNodeManager = PathfindingNodeManager.Instance;
@@ -68,7 +74,7 @@ public class MallGenerator : MonoBehaviour
         InitPathfindGrid();
         SpawnFurniture();
         SetPathfinderGridValues();
-        //DebugCubes();
+        DebugCubes();
         //PlacePlayerInMall(); //TO-DO
     }
 
@@ -532,6 +538,7 @@ public class MallGenerator : MonoBehaviour
     private void SpawnFurniture() {
         StoreFurnitureSpawner.SpawnBookStore(2);
     }
+
 }
 
 public class MallSpace {
@@ -548,6 +555,11 @@ public class MallSpace {
     public Vector2 GetMiddleOfRoom
     {
         get { return new Vector2(x + w / 2, y + h / 2); }
+    }
+
+    public Vector2 GetStartPositionOfRoom
+    {
+        get { return new Vector2(x, y); }
     }
 
     public Vector2 GetHeightWidthofRoom

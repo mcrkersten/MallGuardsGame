@@ -1,16 +1,14 @@
 fileFormatVersion: 2
-guid: c73e5a0b77b6bd649841a9d021cd8ce5
+guid: 505ff166816182849b72c9965c307e48
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    100000: Test
-    100002: //RootNode
-    400000: Test
-    400002: //RootNode
-    2100000: TestMat
-    2300000: Test
-    3300000: Test
-    4300000: Test
+    100000: //RootNode
+    400000: //RootNode
+    2100000: metalDark
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: computerMouse
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -42,7 +40,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.035
+    globalScale: 0.1
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1

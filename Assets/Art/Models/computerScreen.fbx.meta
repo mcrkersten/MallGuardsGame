@@ -1,16 +1,15 @@
 fileFormatVersion: 2
-guid: d46f6872edb6aac488d000559ab38c84
+guid: 611e3e0153887c243be08e47a512c35d
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    100000: CashierTable
-    100002: //RootNode
-    400000: CashierTable
-    400002: //RootNode
-    2100000: CashierTableMat
-    2300000: CashierTable
-    3300000: CashierTable
-    4300000: CashierTable
+    100000: //RootNode
+    400000: //RootNode
+    2100000: metalDark
+    2100002: metal
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: computerScreen
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -42,7 +41,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.035
+    globalScale: 0.1
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
