@@ -20,6 +20,23 @@ public enum PathfindNode {
 
 public class MallGenerator : MonoBehaviour
 {
+    private static MallGenerator instance = null;
+    public static MallGenerator Instance
+    {
+        get {
+            if (instance == null) {
+                // This is where the magic happens.
+                instance = FindObjectOfType(typeof(MallGenerator)) as MallGenerator;
+            }
+
+            // If it is still null, create a new instance
+            if (instance == null) {
+                throw new System.ArgumentException("Parameter cannot be null", "MallGenerator");
+            }
+            return instance;
+        }
+    }
+
     public int mallWidth, mallHeight, hallWidht;
     public float scaleFactor;
     private Vector4 hallwaysize;
@@ -28,6 +45,7 @@ public class MallGenerator : MonoBehaviour
     public GameObject debugBox;
     PathfindingNodeManager pathfindingNodeManager;
     public StoreFurnitureSpawner StoreFurnitureSpawner;
+    public Pathfinding pathfinder;
 
     private List<Tile[,]> stores = new List<Tile[,]>();
     private List<MallSpace> storeSpaces = new List<MallSpace>();
@@ -59,6 +77,9 @@ public class MallGenerator : MonoBehaviour
         }
     }
 
+    private void Update() {
+    }
+
     public void GenerateMall() {
         ClearMall();
         InitMall();
@@ -74,6 +95,9 @@ public class MallGenerator : MonoBehaviour
         InitPathfindGrid();
         SpawnFurniture();
         SetPathfinderGridValues();
+        pathfinder.FindPath(new Vector2(64.66666f, 54.66667f), new Vector2(33.33333f, 44.33333f));
+
+
         //DebugCubes();
         //PlacePlayerInMall(); //TO-DO
     }
@@ -123,11 +147,14 @@ public class MallGenerator : MonoBehaviour
                 Vector2 position = new Vector2(x.x - gridPercentage, x.y - gridPercentage);
                 for (int z = 0; z < gridSize; z++) {
                     for (int q = 0; q < gridSize; q++) {
-                        if (doors[(int)x.x, (int)x.y] == Tile.Door) {
-                            pathfindingNodeManager.AddNavPoint(new PathPoint(roomNumber, new Vector2(position[0], position[1]), 1, PathfindNode.Door));
-                        }
-                        else {
-                            pathfindingNodeManager.AddNavPoint(new PathPoint(roomNumber, new Vector2(position[0], position[1]), 1, PathfindNode.Walkable));
+                        PathPoint r = pathfindingNodeManager.GetPathPoint(position);
+                        if (r.GetPosition != new Vector2(position[0],position[1])) {
+                            if (doors[(int)x.x, (int)x.y] == Tile.Door) {
+                                pathfindingNodeManager.AddNavPoint(new PathPoint(roomNumber, new Vector2(position[0], position[1]), 1, PathfindNode.Door));
+                            }
+                            else {
+                                pathfindingNodeManager.AddNavPoint(new PathPoint(roomNumber, new Vector2(position[0], position[1]), 1, PathfindNode.Walkable));
+                            }
                         }
                         position[0] += gridPercentage;
                     }
@@ -189,6 +216,7 @@ public class MallGenerator : MonoBehaviour
                 continue;
             }
             PathPoint temp;
+
             temp = pathfindingNodeManager.GetPathPoint(new Vector2(pos.x - gridPercentage, pos.y));
             if(temp.GetNode == PathfindNode.None || temp.GetStoreNumber != p.GetStoreNumber) {
                 p.SetNode = PathfindNode.Nonwalkable;
@@ -540,112 +568,35 @@ public class MallGenerator : MonoBehaviour
         StoreFurnitureSpawner.SpawnDrycleaning(1);
     }
 
-}
 
-public class MallSpace {
-    public int x, y, w, h;
-    public List<Vector2> extraTiles;
-    public MallSpace(int x, int y, int w, int h) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-        extraTiles = new List<Vector2>();
-    }
-
-    public Vector2 GetMiddleOfRoom
-    {
-        get { return new Vector2(x + w / 2, y + h / 2); }
-    }
-
-    public Vector2 GetStartPositionOfRoom
-    {
-        get { return new Vector2(x, y); }
-    }
-
-    public Vector2 GetHeightWidthofRoom
-    {
-        get { return new Vector2(w, h); }
-    }
-
-    public void AddTile(int x, int y) {
-        extraTiles.Add(new Vector2(x, y));
-    }
-}
-
-public class PathPoint {
-    private Vector2 position;
-    private int storeNumber;
-    private float weight;
-    private PathfindNode node;
-
-    public PathPoint(int storeNumber ,Vector2 position, float weight, PathfindNode node) {
-        this.storeNumber = storeNumber;
-        this.position = position;
-        this.weight = weight;
-        this.node = node;
-    }
-
-    public Vector2 GetPosition {
-        get { return position; }
-    }
-
-    public int GetStoreNumber
-    {
-        get { return storeNumber; }
-    }
-
-    public PathfindNode GetNode
-    {
-        get { return node; }
-    }
-
-    public PathfindNode SetNode
-    {
-        set { this.node = value; }
-    }
-}
-
-public class PathfindingNodeManager {
-    private static PathfindingNodeManager instance = null;
-    private static readonly object padlock = new object();
-    public static PathfindingNodeManager Instance
-    {
-        get {
-            lock (padlock) {
-                if (instance == null) {
-                    instance = new PathfindingNodeManager();
+    private void OnDrawGizmos() {
+        pathfindingNodeManager = PathfindingNodeManager.Instance;
+        if (pathfindingNodeManager.ReturnNavPointList().Count > 0)//If the grid is not empty
+        {
+            foreach (PathPoint n in pathfindingNodeManager.ReturnNavPointList())//Loop through every node in the grid
+            {
+                if (n.GetNode == PathfindNode.Nonwalkable)//If the current node is a wall node
+                {
+                    Gizmos.color = Color.white;//Set the color of the node
                 }
-                return instance;
+                else {
+                    Gizmos.color = Color.yellow;//Set the color of the node
+                }
+
+
+                if (pathfindingNodeManager.FinalPath != null)//If the final path is not empty
+                {
+                    if (pathfindingNodeManager.FinalPath.Contains(n))//If the current node is in the final path
+                    {
+                        Gizmos.color = Color.red;//Set the color of that node
+                    }
+
+                }
+                Gizmos.DrawCube(new Vector3(n.GetPosition.x,0, n.GetPosition.y), new Vector3(.3f, .3f, .3f));//Draw the node at the position of the node.
             }
         }
-    }
-
-    PathfindingNodeManager() {
-    }
-
-    private List<PathPoint> navPoints = new List<PathPoint>();
-
-    public void AddNavPoint(PathPoint point) {
-        if (!navPoints.Contains(point)) {
-            navPoints.Add(point);
-        }
-    }
-
-    public PathPoint GetPathPoint(Vector2 position) {
-        foreach(PathPoint p in navPoints) {
-            if(p.GetPosition == position) {
-                return p;
-            }
-        }
-        return new PathPoint(1000,position, 1000, 0);
-    }
-
-    public List<PathPoint> ReturnNavPointList() {
-        return navPoints;
-    }
-
-    public void ClearManager() {
-        navPoints.Clear();
     }
 }
+
+
+
