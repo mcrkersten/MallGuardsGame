@@ -271,7 +271,7 @@ MonoBehaviour:
   sharedProfile: {fileID: 11400000, guid: 9f91acc678270bb48a4f8c19008b75e4, type: 2}
   isGlobal: 1
   blendDistance: 0
-  weight: 1
+  weight: 0.371
   priority: 0
 --- !u!1 &764841806
 GameObject:
@@ -316,38 +316,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!84 &788099541
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_Width: 4096
-  m_Height: 4096
-  m_AntiAliasing: 1
-  m_DepthFormat: 0
-  m_ColorFormat: 14
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
 --- !u!84 &1384298984
 RenderTexture:
   m_ObjectHideFlags: 0
@@ -474,8 +442,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1688571207}
   - component: {fileID: 1688571206}
-  - component: {fileID: 1688571208}
   - component: {fileID: 1688571209}
+  - component: {fileID: 1688571208}
   m_Layer: 0
   m_Name: Generator
   m_TagString: Untagged
@@ -495,14 +463,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5424fcbd4bac62944af85004aa49c29d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnCubes: 0
   mallWidth: 100
   mallHeight: 100
   hallWidht: 3
   scaleFactor: 1
   plazaSize: {x: 5, y: 5}
   halwayLenght: {x: 7, y: 7}
-  storeWidth: {x: 5, y: 5}
-  storeHeight: {x: 5, y: 5}
+  storeWidth: {x: 3, y: 7}
+  storeHeight: {x: 3, y: 7}
   debugBox: {fileID: 8736626789500390188, guid: ab64ac84a6086384685007e7f2f2eff9,
     type: 3}
   StoreFurnitureSpawner: {fileID: 1688571208}
@@ -536,14 +505,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac298572eeacfa345bc26b160894d49e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  storeFurniture:
-  - {fileID: 3245187567743543560, guid: b4dced5b5eb4c244584835b552dc683f, type: 3}
-  registers:
-  - {fileID: 6381049117767919959, guid: 9bd86b4274f7dea459302cfd0726cfdf, type: 3}
+  storeFurniture: []
+  registers: []
   mallGenerator: {fileID: 1688571206}
-  storeDecoration:
-  - {fileID: 8498331417973374176, guid: 8e2e5623601d4c340ba37baa76c7856f, type: 3}
-  - {fileID: 6961988955020324769, guid: 611f1e440799ae242b5e628fb01e1f12, type: 3}
+  storeDecoration: []
 --- !u!114 &1688571209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -556,3 +521,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce31c35382f49dc4a964b951d244fea9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!84 &2043598629
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_Width: 4096
+  m_Height: 4096
+  m_AntiAliasing: 1
+  m_DepthFormat: 0
+  m_ColorFormat: 14
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1

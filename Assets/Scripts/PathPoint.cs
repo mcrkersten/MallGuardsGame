@@ -13,12 +13,33 @@ public class PathPoint {
 
     public float FCost { get { return igCost + ihCost; } }
     public PathPoint parent;    //Parent node for A*
+    public List<PathPoint> neighbours = new List<PathPoint>();
 
     public PathPoint(int storeNumber, Vector2 position, float weight, PathfindNode node) {
         this.storeNumber = storeNumber;
         this.position = position;
         this.weight = weight;
         this.node = node;
+    }
+
+    public void GetNeighbours() {
+        PathPoint theNeighbour;
+        float gridStepSize = 1 / MallGenerator.Instance.gridSize;                                       //Distance between gridpoints
+
+        float xTestPosition = position.x - gridStepSize;
+        float yTestPosition = position.y - gridStepSize;
+        for (float x = xTestPosition; x <= position.x + gridStepSize; x += gridStepSize) {
+            for (float y = yTestPosition; y <= position.y + gridStepSize; y += gridStepSize) {
+                //if we are on the node tha was passed in, skip this iteration.
+                if (x == 0 && y == 0) {
+                    continue;
+                }
+                theNeighbour = PathfindingNodeManager.Instance.GetPathPoint(new Vector2(x, y));
+                if (theNeighbour != null) {
+                    neighbours.Add(theNeighbour);                                          //Add neigbour to the neighbourList
+                }
+            }
+        }
     }
 
     public Vector2 GetPosition

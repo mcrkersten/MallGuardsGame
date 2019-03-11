@@ -17,6 +17,9 @@ public class MallGeneratorEditor : Editor {
         if (GUILayout.Button("Generate Mall")) {
             mallGenerator.GenerateMall();
         }
+        if (GUILayout.Button("New Path")) {
+            mallGenerator.FindPathOnButtonPress();
+        }
 
     }
 }

@@ -8,6 +8,7 @@ public class Pathfinding : MonoBehaviour
     private Vector2 startPosition;
     private Vector2 TargetPosition;
 
+
     public void FindPath(Vector2 start, Vector2 target) {
         pathfindingNodeManager = PathfindingNodeManager.Instance;
         PathPoint startPoint = pathfindingNodeManager.GetPathPoint(start);
@@ -33,10 +34,11 @@ public class Pathfinding : MonoBehaviour
             if (currentPoint == targetPoint)                     //If the current point is the same as the target node
             {
                 GetFinalPath(startPoint, targetPoint);           //Calculate the final path
+                print("found");
             }
 
             //Loop through each neighbor of the current point
-            foreach (PathPoint NeighborNode in pathfindingNodeManager.GetNeighbours(currentPoint))
+            foreach (PathPoint NeighborNode in currentPoint.neighbours)
             {
                 //If the neighbor is nonWalkable or has already been checked
                 if (NeighborNode.GetNode == PathfindNode.Nonwalkable || closedList.Contains(NeighborNode))

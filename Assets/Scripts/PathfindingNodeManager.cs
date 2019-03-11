@@ -39,57 +39,14 @@ public class PathfindingNodeManager {
                 return p;
             }
         }
-        //return imposible Node
-        Debug.Log("woops");
-        return new PathPoint(1000, new Vector2(0,0), 1000, 0);
+        //return imposible Node | Needs to be caught in script by != null
+        return null;
     }
 
-    //Return a list of all neighbours of the given PathPoint
-    public List<PathPoint> GetNeighbours(PathPoint parentPoint) {
-        List<PathPoint> neighbourList = new List<PathPoint>();                               //List of neighbours we will return
-        float gridStepSize = 1/mallGenerator.gridSize;                                         //Distance between gridpoints
-        Vector2 parentPosition = parentPoint.GetPosition;                                    //Position of the Pathpoint that we are getting the neighbours from
-        float xTestPosition;                                                                 //Variable to check if the xPosition is inside the mallgrid
-        float yTestPosition;                                                                 //Variable to check if the yPosition is inside the mallgrid
-
-
-        //Get rightside neighbour
-        xTestPosition = parentPosition.x + gridStepSize;
-        yTestPosition = parentPosition.y;
-        //if (parentPosition.x > 0 && parentPosition.x < xTestPosition){                     //Check if the node Xposition does not fall outside the size of the grid        
-            //if (parentPosition.y > 0 && parentPosition.y < yTestPosition){                 //Check if the node Yposition we are checking does not fall outside the size of the grid
-                neighbourList.Add(GetPathPoint(new Vector2(xTestPosition, yTestPosition)));    //Add neigbour to the neighbourList
-            //}
-        //}
-        //repeat for each side
-
-        //Get leftSide neighbour
-        xTestPosition = parentPosition.x - gridStepSize;
-        yTestPosition = parentPosition.y;
-        //if (parentPosition.x >= 0 && parentPosition.x < xTestPosition) {
-            //if (parentPosition.y >= 0 && parentPosition.y < yTestPosition) {
-                neighbourList.Add(GetPathPoint(new Vector2(xTestPosition, yTestPosition)));
-            //}
-        //}
-
-        //Get topSide neighbour
-        xTestPosition = parentPosition.x;
-        yTestPosition = parentPosition.y + gridStepSize;
-        //if (parentPosition.x >= 0 && parentPosition.x < xTestPosition) {
-            //if (parentPosition.y >= 0 && parentPosition.y < yTestPosition) {
-                neighbourList.Add(GetPathPoint(new Vector2(xTestPosition, yTestPosition)));
-            //}
-        //}
-
-        //Get downSide neighbour
-        xTestPosition = parentPosition.x;
-        yTestPosition = parentPosition.y - gridStepSize;
-        //if (parentPosition.x >= 0 && parentPosition.x < xTestPosition) {
-            //if (parentPosition.y >= 0 && parentPosition.y < yTestPosition) {
-                neighbourList.Add(GetPathPoint(new Vector2(xTestPosition, yTestPosition)));
-            //}
-        //}
-        return neighbourList;
+    public void SetAllPathPointNeighbours() {
+        foreach(PathPoint point in allPathPoints) {
+            point.GetNeighbours();
+        }
     }
 
     public List<PathPoint> ReturnNavPointList() {
