@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pathfinding : MonoBehaviour
+public class Pathfinding
 {
     private PathfindingNodeManager pathfindingNodeManager;
     private Vector2 startPosition;
@@ -33,8 +33,8 @@ public class Pathfinding : MonoBehaviour
 
             if (currentPoint == targetPoint)                     //If the current point is the same as the target node
             {
+                Debug.Log("found");
                 GetFinalPath(startPoint, targetPoint);           //Calculate the final path
-                print("found");
             }
 
             //Loop through each neighbor of the current point

@@ -24,21 +24,27 @@ public class PathPoint {
 
     public void GetNeighbours() {
         PathPoint theNeighbour;
-        float gridStepSize = 1 / MallGenerator.Instance.gridSize;                                       //Distance between gridpoints
 
-        float xTestPosition = position.x - gridStepSize;
-        float yTestPosition = position.y - gridStepSize;
-        for (float x = xTestPosition; x <= position.x + gridStepSize; x += gridStepSize) {
-            for (float y = yTestPosition; y <= position.y + gridStepSize; y += gridStepSize) {
-                //if we are on the node tha was passed in, skip this iteration.
-                if (x == 0 && y == 0) {
-                    continue;
-                }
-                theNeighbour = PathfindingNodeManager.Instance.GetPathPoint(new Vector2(x, y));
+        float gridSize = MallGenerator.Instance.gridSize;
+        float xx = position.x;
+        float yy = position.y;
+        float gridStepSize = 1 / MallGenerator.Instance.gridSize;
+
+        xx -= gridStepSize;
+        yy -= gridStepSize;
+
+        for (int x = 0; x < gridSize; x++) {
+            for (int y = 0; y < gridSize; y++) {
+                theNeighbour = PathfindingNodeManager.Instance.GetPathPoint(new Vector2(xx, yy));
                 if (theNeighbour != null) {
-                    neighbours.Add(theNeighbour);                                          //Add neigbour to the neighbourList
+                    neighbours.Add(theNeighbour);
                 }
+                yy += gridStepSize;
             }
+            xx += gridStepSize;
+
+            yy = position.y;
+            yy -= gridStepSize;
         }
     }
 

@@ -316,6 +316,38 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!84 &1091343670
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_Width: 4096
+  m_Height: 4096
+  m_AntiAliasing: 1
+  m_DepthFormat: 0
+  m_ColorFormat: 14
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
 --- !u!84 &1384298984
 RenderTexture:
   m_ObjectHideFlags: 0
@@ -348,6 +380,36 @@ RenderTexture:
     m_WrapW: 1
   m_Dimension: 2
   m_VolumeDepth: 1
+--- !u!1 &1412983901
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1412983902}
+  m_Layer: 0
+  m_Name: GameObject (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1412983902
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1412983901}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 50.3, y: 0.5, z: 52}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1473370622
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -432,6 +494,36 @@ PrefabInstance:
       objectReference: {fileID: 1384298984}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e2269e8bc80d2ee4592ef04623825a28, type: 3}
+--- !u!1 &1680648044
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1680648045}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1680648045
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680648044}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 48.3, y: 0.5, z: 45.7}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1688571205
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,8 +534,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1688571207}
   - component: {fileID: 1688571206}
-  - component: {fileID: 1688571209}
   - component: {fileID: 1688571208}
+  - component: {fileID: 1688571210}
   m_Layer: 0
   m_Name: Generator
   m_TagString: Untagged
@@ -464,21 +556,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnCubes: 0
-  mallWidth: 100
-  mallHeight: 100
+  gridSize: 3
   hallWidht: 3
-  scaleFactor: 1
   plazaSize: {x: 5, y: 5}
-  halwayLenght: {x: 7, y: 7}
   storeWidth: {x: 3, y: 7}
   storeHeight: {x: 3, y: 7}
-  debugBox: {fileID: 8736626789500390188, guid: ab64ac84a6086384685007e7f2f2eff9,
-    type: 3}
-  StoreFurnitureSpawner: {fileID: 1688571208}
-  pathfinder: {fileID: 1688571209}
-  gridSize: 3
-  allGameObjectsMall: []
   storesOnHallway: 3
+  mallWidth: 39
+  mallHeight: 25
 --- !u!4 &1688571207
 Transform:
   m_ObjectHideFlags: 0
@@ -505,11 +590,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac298572eeacfa345bc26b160894d49e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  storeFurniture: []
-  registers: []
+  storeFurniture:
+  - {fileID: 7437686890030121316, guid: 5887f1fcb82b47348a1c5f2a46a2ac6d, type: 3}
+  - {fileID: 7709092449841679425, guid: 5adef091c3d054c49b65b411791ab467, type: 3}
+  - {fileID: 695633674748554869, guid: ed4e58f3605d3a84a9a4fc27c3669a9a, type: 3}
+  registers:
+  - {fileID: 6381049117767919959, guid: 9bd86b4274f7dea459302cfd0726cfdf, type: 3}
   mallGenerator: {fileID: 1688571206}
-  storeDecoration: []
---- !u!114 &1688571209
+  storeDecoration:
+  - {fileID: 8498331417973374176, guid: 8e2e5623601d4c340ba37baa76c7856f, type: 3}
+  - {fileID: 6961988955020324769, guid: 611f1e440799ae242b5e628fb01e1f12, type: 3}
+  - {fileID: 524591093527102387, guid: 894eab2da7c42024683b65c814f7b250, type: 3}
+  - {fileID: 6629853601819673241, guid: ca8226053e2d37f47b1a6fadaae1feda, type: 3}
+  - {fileID: 790318187452709663, guid: 3d19ecacc4001134ba2d6e92e659444e, type: 3}
+  - {fileID: 3506388125071130877, guid: edcfc58444eacfa43a59007a5caefca3, type: 3}
+--- !u!114 &1688571210
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -518,38 +613,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1688571205}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce31c35382f49dc4a964b951d244fea9, type: 3}
+  m_Script: {fileID: 11500000, guid: be3986d9882024840b4e6a04b51369b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!84 &2043598629
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_Width: 4096
-  m_Height: 4096
-  m_AntiAliasing: 1
-  m_DepthFormat: 0
-  m_ColorFormat: 14
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
+  debugBox: {fileID: 8736626789500390188, guid: ab64ac84a6086384685007e7f2f2eff9,
+    type: 3}
+  allGameObjectsMall: []

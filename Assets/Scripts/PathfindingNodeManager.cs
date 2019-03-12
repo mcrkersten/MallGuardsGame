@@ -53,7 +53,7 @@ public class PathfindingNodeManager {
         return allPathPoints;
     }
 
-    public void ClearManager() {
+    public void Clear() {
         allPathPoints.Clear();
     }
 }

@@ -3,9 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class StoreFurnitureSpawner : MonoBehaviour
-{
+public class StoreFurnitureSpawner : MonoBehaviour {
+    private static StoreFurnitureSpawner instance = null;
+    public static StoreFurnitureSpawner Instance
+    {
+        get {
+            if (instance == null) {
+                // This is where the magic happens.
+                instance = FindObjectOfType(typeof(StoreFurnitureSpawner)) as StoreFurnitureSpawner;
+            }
+
+            // If it is still null, create a new instance
+            if (instance == null) {
+                throw new System.ArgumentException("Parameter cannot be null", "StoreFurnitureSpawner");
+            }
+            return instance;
+        }
+    }
+
+    private Tiles tiles;
     private PathfindingNodeManager pathfindingNodeManager;
+    private ObjectSpawner objectSpawner;
     public GameObject[] storeFurniture;
     public GameObject[] registers;
     public MallGenerator mallGenerator;
@@ -20,9 +38,11 @@ public class StoreFurnitureSpawner : MonoBehaviour
     Vector2 storeSize;
 
     private void InitSettings(int storeNumber) {
+        tiles = Tiles.Instance;
+        objectSpawner = ObjectSpawner.Instance;
         pathfindingNodeManager = PathfindingNodeManager.Instance;
-        stepsSize = (1 / mallGenerator.gridSize);
-        gridSize = mallGenerator.gridSize;
+        stepsSize = (1 / tiles.gridSize);
+        gridSize = tiles.gridSize;
         gridPercentage = (1 / gridSize);
         registers = Resources.LoadAll<GameObject>("Register");
         pointsInRoom = new List<PathPoint>();
@@ -32,7 +52,7 @@ public class StoreFurnitureSpawner : MonoBehaviour
             }
         }
 
-        stores = mallGenerator.GetStoreSpaces;
+        stores = tiles.GetStoreSpaces;
         currentStore = stores[storeNumber];
         storeSize = currentStore.GetHeightWidthofRoom;
         storeDecoration = Resources.LoadAll<GameObject>("StoreDecoration");
@@ -47,23 +67,23 @@ public class StoreFurnitureSpawner : MonoBehaviour
         //List for all points in room.
 
         if(storeSize == new Vector2(3, 3)) {
-            SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 1), new Vector2(1, 1), 0, storeDecoration[5], storeNumber);
+            objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 1), new Vector2(1, 1), 0, storeDecoration[5], storeNumber);
         }
 
         if(storeSize == new Vector2(3, 5)) {
-            SpawnObjectOnPlace(pointsInRoom, storeDecoration[0].GetComponent<FurnitureSpace>().size, new Vector2(1 + gridPercentage, 1 + gridPercentage), 90f, storeDecoration[0], storeNumber);
-            SpawnObjectOnPlace(pointsInRoom, storeDecoration[0].GetComponent<FurnitureSpace>().size, new Vector2(1 + gridPercentage, 2 + gridPercentage), 90f, storeDecoration[0], storeNumber);
+            objectSpawner.SpawnObjectOnPlace(pointsInRoom, storeDecoration[0].GetComponent<FurnitureSpace>().size, new Vector2(1 + gridPercentage, 1 + gridPercentage), 90f, storeDecoration[0], storeNumber);
+            objectSpawner.SpawnObjectOnPlace(pointsInRoom, storeDecoration[0].GetComponent<FurnitureSpace>().size, new Vector2(1 + gridPercentage, 2 + gridPercentage), 90f, storeDecoration[0], storeNumber);
         }
 
         if (storeSize == new Vector2(5, 3)) {
-            SpawnObjectOnPlace(pointsInRoom, storeDecoration[0].GetComponent<FurnitureSpace>().size, new Vector2(3 + gridPercentage *2, 1), 90f, storeDecoration[0], storeNumber);
+            objectSpawner.SpawnObjectOnPlace(pointsInRoom, storeDecoration[0].GetComponent<FurnitureSpace>().size, new Vector2(3 + gridPercentage *2, 1), 90f, storeDecoration[0], storeNumber);
         }
 
         if (storeSize == new Vector2(5, 5)) {
-            SpawnObjectOnPlace(pointsInRoom, storeDecoration[1].GetComponent<FurnitureSpace>().size, new Vector2(1, 2), -90f, storeDecoration[1], storeNumber);
-            SpawnObjectOnPlace(pointsInRoom, storeDecoration[1].GetComponent<FurnitureSpace>().size, new Vector2(3, 2), 0, storeDecoration[1], storeNumber);
-            SpawnObjectOnPlace(pointsInRoom, storeDecoration[0].GetComponent<FurnitureSpace>().size, new Vector2(2 + gridPercentage, 2 + gridPercentage), 90f, storeDecoration[0], storeNumber);
-            SpawnObjectOnPlace(pointsInRoom, storeDecoration[0].GetComponent<FurnitureSpace>().size, new Vector2(2 + gridPercentage, 2 - gridPercentage), 90f, storeDecoration[0], storeNumber);
+            objectSpawner.SpawnObjectOnPlace(pointsInRoom, storeDecoration[1].GetComponent<FurnitureSpace>().size, new Vector2(1, 2), -90f, storeDecoration[1], storeNumber);
+            objectSpawner.SpawnObjectOnPlace(pointsInRoom, storeDecoration[1].GetComponent<FurnitureSpace>().size, new Vector2(3, 2), 0, storeDecoration[1], storeNumber);
+            objectSpawner.SpawnObjectOnPlace(pointsInRoom, storeDecoration[0].GetComponent<FurnitureSpace>().size, new Vector2(2 + gridPercentage, 2 + gridPercentage), 90f, storeDecoration[0], storeNumber);
+            objectSpawner.SpawnObjectOnPlace(pointsInRoom, storeDecoration[0].GetComponent<FurnitureSpace>().size, new Vector2(2 + gridPercentage, 2 - gridPercentage), 90f, storeDecoration[0], storeNumber);
         }
 
         List<PathPoint> bottomWall = GetBottomtWall(pointsInRoom);
@@ -86,43 +106,43 @@ public class StoreFurnitureSpawner : MonoBehaviour
 
         if (storeSize == new Vector2(5, 5))
         {
-            SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 1), new Vector2(2, 3), 0, storeDecoration[5], storeNumber);
-            SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 1), new Vector2(2, 1), 0, storeDecoration[5], storeNumber);
+            objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 1), new Vector2(2, 3), 0, storeDecoration[5], storeNumber);
+            objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 1), new Vector2(2, 1), 0, storeDecoration[5], storeNumber);
             for (int i = 1; i < 4; i++) {
-                SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(1 + gridPercentage, i + gridPercentage), 0, storeDecoration[2], storeNumber);
-                SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(3 - gridPercentage, i + gridPercentage), 0, storeDecoration[2], storeNumber);
+                objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(1 + gridPercentage, i + gridPercentage), 0, storeDecoration[2], storeNumber);
+                objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(3 - gridPercentage, i + gridPercentage), 0, storeDecoration[2], storeNumber);
             }
         }
 
         if(storeSize == new Vector2(3, 3)) {
             if (TestIfDoor(pointsInRoom, storeNumber)) {
-                SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 3), new Vector2(1, 2), 0, storeDecoration[4], storeNumber);
-                SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(1, 2 - gridPercentage), 0, storeDecoration[2], storeNumber);
-                SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(1, 1 -gridPercentage), 0, storeDecoration[2], storeNumber);
+                objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 3), new Vector2(1, 2), 0, storeDecoration[4], storeNumber);
+                objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(1, 2 - gridPercentage), 0, storeDecoration[2], storeNumber);
+                objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(1, 1 -gridPercentage), 0, storeDecoration[2], storeNumber);
             }
             else {
-                SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 3), new Vector2(1, 0), 180, storeDecoration[4], storeNumber);
-                SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(1, 2), 0, storeDecoration[2], storeNumber);
-                SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(1, 1), 0, storeDecoration[2], storeNumber);
+                objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 3), new Vector2(1, 0), 180, storeDecoration[4], storeNumber);
+                objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(1, 2), 0, storeDecoration[2], storeNumber);
+                objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(1, 1), 0, storeDecoration[2], storeNumber);
             }
         }
 
         if(storeSize == new Vector2(3, 5)) {
             for (int i = 1; i < 4; i++) {
-                SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(1, i + gridPercentage), 0, storeDecoration[2], storeNumber);
+                objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(1, i + gridPercentage), 0, storeDecoration[2], storeNumber);
             }
             if (TestIfDoor(pointsInRoom, storeNumber)) {
-                SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 3), new Vector2(1 , 4), 0, storeDecoration[4], storeNumber);
+                objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 3), new Vector2(1 , 4), 0, storeDecoration[4], storeNumber);
             }
             else {
-                SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 3), new Vector2(1, 0), 180, storeDecoration[4], storeNumber);
+                objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 3), new Vector2(1, 0), 180, storeDecoration[4], storeNumber);
             }
         }
 
         if(storeSize == new Vector2(5, 3)) {
             for (int i = 1; i < 3; i++) {
-                SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(1, i), 0, storeDecoration[2], storeNumber);
-                SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(3, i), 0, storeDecoration[2], storeNumber);
+                objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(1, i), 0, storeDecoration[2], storeNumber);
+                objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 3), new Vector2(3, i), 0, storeDecoration[2], storeNumber);
             }
         }
 
@@ -143,40 +163,40 @@ public class StoreFurnitureSpawner : MonoBehaviour
 
         if (storeSize == new Vector2(5, 3)) {
             if (TestIfDoor(pointsInRoom, storeNumber)) {
-                SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(1 + gridPercentage, 0 + gridPercentage*2), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
-                SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(3, 0 + gridPercentage * 2), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
+                objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(1 + gridPercentage, 0 + gridPercentage*2), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
+                objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(3, 0 + gridPercentage * 2), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
             }
             else {
-                SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(3, 2 - gridPercentage), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
-                SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(1 + gridPercentage, 2 - gridPercentage), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
+                objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(3, 2 - gridPercentage), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
+                objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(1 + gridPercentage, 2 - gridPercentage), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
             }
         }
 
         if(storeSize == new Vector2(3, 5)) {
             for (int i = 1; i < 3; i++) {
                 if (TestIfDoor(pointsInRoom, storeNumber)) {
-                    SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(1 + gridPercentage * 2, i + 1), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
-                    SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(1, i + 1), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
+                    objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(1 + gridPercentage * 2, i + 1), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
+                    objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(1, i + 1), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
                 }
                 else {
-                    SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(1 + gridPercentage * 2, i + gridPercentage), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
-                    SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(1, i + gridPercentage), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
+                    objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(1 + gridPercentage * 2, i + gridPercentage), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
+                    objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(1, i + gridPercentage), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
                 }
             }
         }
 
         if(storeSize == new Vector2(5, 5)) {
 
-            SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 1), new Vector2(2, 2), 0, storeDecoration[5], storeNumber);
+            objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(1, 1), new Vector2(2, 2), 0, storeDecoration[5], storeNumber);
             List<PathPoint> bottomWall = GetBottomtWall(pointsInRoom);
             List<PathPoint> topWall = GetToptWall(pointsInRoom);
             SetFurnitureHorizontalWall(bottomWall, storeFurniture, storeNumber);
             SetFurnitureHorizontalWall(topWall, storeFurniture, storeNumber);
 
-            SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(2 - gridPercentage,2 - gridPercentage), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
-            SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(3 - gridPercentage, 2 - gridPercentage), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
-            SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(2 - gridPercentage, 3 - gridPercentage), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
-            SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(3 - gridPercentage, 3 - gridPercentage), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
+            objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(2 - gridPercentage,2 - gridPercentage), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
+            objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(3 - gridPercentage, 2 - gridPercentage), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
+            objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(2 - gridPercentage, 3 - gridPercentage), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
+            objectSpawner.SpawnObjectOnPlace(pointsInRoom, new Vector2(2, 2), new Vector2(3 - gridPercentage, 3 - gridPercentage), 0, fruits[Random.Range(0, fruits.Length)], storeNumber);
         }
 
         List<PathPoint> leftWall = GetLeftWall(pointsInRoom);
@@ -187,12 +207,9 @@ public class StoreFurnitureSpawner : MonoBehaviour
         SetFurnitureVerticalWall(rightWall, storeFurniture, storeNumber);
     }
 
-
-
-
     private void SetFurnitureHorizontalWall(List<PathPoint> wall, GameObject[] furniture, int storeNumber) {
 
-        float stepsSize = (1 / mallGenerator.gridSize);
+        float stepsSize = (1 / tiles.gridSize);
         for (int xx = 0; xx < wall.Count; xx++) {
 
             //If own position iteration is taken go to next iteration. 
@@ -212,15 +229,15 @@ public class StoreFurnitureSpawner : MonoBehaviour
                 if (TestPosition(testPosition, storeNumber) && TestPosition(wall[xx].GetPosition, storeNumber)) {
                     //If point behind furniture = wall
                     if (!TestPosition(new Vector2(wall[xx].GetPosition.x + (stepsSize), wall[xx].GetPosition.y - (stepsSize)), storeNumber)) {
-                        mallGenerator.allGameObjectsMall.Add(Instantiate(furniture[g],
+                        objectSpawner.SpawnIndividualObjects(furniture[g],
                             new Vector3(wall[xx].GetPosition.x + (stepsSize * blocksX), 0, wall[xx].GetPosition.y), Quaternion.Euler(0, 180, 0),
-                            mallGenerator.gameObject.transform));
+                            mallGenerator.gameObject.transform);
                     }
                     else {
-                        mallGenerator.allGameObjectsMall.Add(Instantiate(furniture[g],
+                        objectSpawner.SpawnIndividualObjects(furniture[g],
                             new Vector3(wall[xx].GetPosition.x, 0, wall[xx].GetPosition.y),
                             Quaternion.Euler(0, 0, 0),
-                            mallGenerator.gameObject.transform));
+                            mallGenerator.gameObject.transform);
                     }
 
                     for (int yy = 0; yy <= blocksX; yy++) {
@@ -235,7 +252,7 @@ public class StoreFurnitureSpawner : MonoBehaviour
     }
 
     private void SetFurnitureVerticalWall(List<PathPoint> wall, GameObject[] furniture, int storeNumber) {
-        float stepsSize = (1 / mallGenerator.gridSize);
+        float stepsSize = (1 / tiles.gridSize);
         for (int xx = 0; xx < wall.Count; xx++) {
 
             //If own position iteration is taken go to next iteration. 
@@ -255,15 +272,15 @@ public class StoreFurnitureSpawner : MonoBehaviour
                 if (TestPosition(testPosition, storeNumber) && TestPosition(wall[xx].GetPosition, storeNumber)) {
                     //If point behind furniture = wall
                     if (!TestPosition(new Vector2(wall[xx].GetPosition.x - (stepsSize), wall[xx].GetPosition.y + (stepsSize * blocksX)), storeNumber)) {
-                        mallGenerator.allGameObjectsMall.Add(Instantiate(furniture[g],
+                        objectSpawner.SpawnIndividualObjects(furniture[g],
                             new Vector3(wall[xx].GetPosition.x, 0, wall[xx].GetPosition.y), Quaternion.Euler(0, -90, 0),
-                            mallGenerator.gameObject.transform));
+                            mallGenerator.gameObject.transform);
                     }
                     else {
-                        mallGenerator.allGameObjectsMall.Add(Instantiate(furniture[g],
+                        objectSpawner.SpawnIndividualObjects(furniture[g],
                             new Vector3(wall[xx].GetPosition.x, 0, wall[xx].GetPosition.y + (stepsSize * blocksX)),
                             Quaternion.Euler(0, 90, 0),
-                            mallGenerator.gameObject.transform));
+                            mallGenerator.gameObject.transform);
                     }
 
                     for (int yy = 0; yy <= blocksX; yy++) {
@@ -277,52 +294,25 @@ public class StoreFurnitureSpawner : MonoBehaviour
         }
     }
 
-    private void SpawnObjectOnPlace(List<PathPoint> points, Vector2 dimensions, Vector2 position, float rotation, GameObject furniture, int storeNumber) {
-        float gridSize = mallGenerator.gridSize;
-        float gridPercentage = (1 / gridSize);
-        List<MallSpace> stores = mallGenerator.GetStoreSpaces;
-        MallSpace currentStore = stores[storeNumber];
-        Vector2 storeCenter = currentStore.GetMiddleOfRoom;
-        Vector2 storePosition = currentStore.GetStartPositionOfRoom;
-        Vector2 storeSize = currentStore.GetHeightWidthofRoom;
-
-        Vector2 actuaPosiotion = new Vector2(position.x + storePosition.x, position.y + storePosition.y);
-
-        mallGenerator.allGameObjectsMall.Add(Instantiate(furniture,
-                            new Vector3(actuaPosiotion.x, 0, actuaPosiotion.y), Quaternion.Euler(0, rotation, 0),
-                            mallGenerator.gameObject.transform));
-
-        Vector2 positionCube = new Vector2(actuaPosiotion.x - gridPercentage, actuaPosiotion.y - gridPercentage);
-        for (int z = 0; z < dimensions.x; z++) {
-            for (int q = 0; q < dimensions.y; q++) {
-                PathPoint temp = pathfindingNodeManager.GetPathPoint(positionCube);
-                temp.SetNode = PathfindNode.Nonwalkable;
-                positionCube[0] += gridPercentage;
-            }
-            positionCube[0] = (actuaPosiotion.x - gridPercentage);
-            positionCube[1] += gridPercentage;
-        }
-    }
-
     private void SetRegister(List<PathPoint> points, int storeNumber) {
-        float gridSize = mallGenerator.gridSize;
+        float gridSize = tiles.gridSize;
         float gridPercentage = (1 / gridSize);
-        List<MallSpace> stores = mallGenerator.GetStoreSpaces;
+        List<MallSpace> stores = tiles.GetStoreSpaces;
         MallSpace currentStore = stores[storeNumber];
         Vector2 storeCenter = currentStore.GetMiddleOfRoom;
         Vector2 storePosition = currentStore.GetStartPositionOfRoom;
         Vector2 storeSize = currentStore.GetHeightWidthofRoom;
-        Tile[,] tiles;
-        tiles = mallGenerator.stores[storeNumber];
+        Tile[,] tilesT;
+        tilesT = tiles.stores[storeNumber];
 
         float x = storeSize.x - 1;
         float y = storeSize.y - 1;
 
         if (TestIfDoor(points, storeNumber)) {
-            SpawnObjectOnPlace(points, new Vector2(3, 3), new Vector2(x/2,y), 180, registers[0], storeNumber);
+            objectSpawner.SpawnObjectOnPlace(points, new Vector2(3, 3), new Vector2(x/2,y), 180, registers[0], storeNumber);
         }
         else {
-            SpawnObjectOnPlace(points, new Vector2(3, 3), new Vector2(x / 2, 0), 0, registers[0], storeNumber);
+            objectSpawner.SpawnObjectOnPlace(points, new Vector2(3, 3), new Vector2(x / 2, 0), 0, registers[0], storeNumber);
         }
     }
 
@@ -340,25 +330,24 @@ public class StoreFurnitureSpawner : MonoBehaviour
     }
 
     private bool TestIfDoor(List<PathPoint> points, int storeNumber) {
-        float gridSize = mallGenerator.gridSize;
+        float gridSize = tiles.gridSize;
         float gridPercentage = (1 / gridSize);
-        List<MallSpace> stores = mallGenerator.GetStoreSpaces;
+        List<MallSpace> stores = tiles.GetStoreSpaces;
         MallSpace currentStore = stores[storeNumber];
         Vector2 storeCenter = currentStore.GetMiddleOfRoom;
         Vector2 storePosition = currentStore.GetStartPositionOfRoom;
         Vector2 storeSize = currentStore.GetHeightWidthofRoom;
-        Tile[,] tiles;
-        tiles = mallGenerator.stores[storeNumber];
+        Tile[,] tilesT;
+        tilesT = tiles.stores[storeNumber];
 
         float x = storeSize.x - 1;
         float y = storeSize.y - 1;
 
-        if (tiles[Mathf.RoundToInt(storePosition.x + (gridPercentage * gridSize) * (storeSize.x / gridSize)), (int)storePosition.y] == Tile.Door) {
+        if (tilesT[Mathf.RoundToInt(storePosition.x + (gridPercentage * gridSize) * (storeSize.x / gridSize)), (int)storePosition.y] == Tile.Door) {
             return true;
         }
         return false;
     }
-
 
 
     //GET WALLS
