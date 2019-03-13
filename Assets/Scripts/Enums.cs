@@ -13,6 +13,7 @@ public enum PathfindNode {
     None = 0,
     Walkable = 1,
     Nonwalkable = 2,
+    Outside = 4,
 
     //Only for initialization
     Door = 3,

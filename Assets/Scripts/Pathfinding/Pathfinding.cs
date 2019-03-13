@@ -2,15 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class Pathfinding
 {
+    private static Pathfinding instance = null;
+    private static readonly object padlock = new object();
+    public static Pathfinding Instance
+    {
+        get {
+            lock (padlock) {
+                if (instance == null) {
+                    instance = new Pathfinding();
+                }
+                return instance;
+            }
+        }
+    }
+    private Pathfinding pathfinding;
+
+    Pathfinding() {
+        pathfindingNodeManager = PathfindingNodeManager.Instance;
+    }
+
     private PathfindingNodeManager pathfindingNodeManager;
     private Vector2 startPosition;
     private Vector2 TargetPosition;
 
 
-    public void FindPath(Vector2 start, Vector2 target) {
-        pathfindingNodeManager = PathfindingNodeManager.Instance;
+    public List<PathPoint> FindPath(Vector2 start, Vector2 target) {
         PathPoint startPoint = pathfindingNodeManager.GetPathPoint(start);
         PathPoint targetPoint = pathfindingNodeManager.GetPathPoint(target);
 
@@ -34,7 +54,8 @@ public class Pathfinding
             if (currentPoint == targetPoint)                     //If the current point is the same as the target node
             {
                 Debug.Log("found");
-                GetFinalPath(startPoint, targetPoint);           //Calculate the final path
+                return GetFinalPath(startPoint, targetPoint);           //Calculate the final path
+
             }
 
             //Loop through each neighbor of the current point
@@ -62,10 +83,11 @@ public class Pathfinding
                 }
             }
         }
+        return null;
     }
 
 
-    void GetFinalPath(PathPoint startPoint, PathPoint endPoint) {
+    List<PathPoint> GetFinalPath(PathPoint startPoint, PathPoint endPoint) {
         List<PathPoint> FinalPath = new List<PathPoint>();        //List to hold the path sequentially 
         PathPoint currentPoint = endPoint;                        //PathPoint to store the current node being checked
 
@@ -76,7 +98,7 @@ public class Pathfinding
         }
 
         FinalPath.Reverse();                                     //Reverse the path to get the correct order
-        pathfindingNodeManager.FinalPath = FinalPath;            //Set the final path
+        return pathfindingNodeManager.FinalPath;           //Return the final path
     }
 
     float GetManhattenDistance(PathPoint pointA, PathPoint pointB) {

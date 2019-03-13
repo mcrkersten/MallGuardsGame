@@ -41,6 +41,11 @@ public class TexturePicker : MonoBehaviour {
         return floorTextures[Random.Range(0, floorTextures.Length)];
     }
 
+    public Texture2D OutsideFloorTextures() {
+        Texture2D[] floorTextures = Resources.LoadAll<Texture2D>("OutsideFloorTextures");
+        return floorTextures[Random.Range(0, floorTextures.Length)];
+    }
+
     public Texture2D GetHallwayWallTexture() {
         Texture2D[] wallTextures = Resources.LoadAll<Texture2D>("HallwayWallTextures");
         return wallTextures[Random.Range(0, wallTextures.Length)];

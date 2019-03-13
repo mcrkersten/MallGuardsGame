@@ -32,7 +32,7 @@ public class ObjectSpawner : MonoBehaviour
 
     private GameObject wall, door, hallwayFloor, storeFloor;
 
-    public void Generate() {
+    public void GenerateMall() {
         SpawnMall();
     }
 
@@ -121,16 +121,31 @@ public class ObjectSpawner : MonoBehaviour
         }
     }
 
+    public void SpawnOutside() {
+        DoActionForPartOfGrid(0, 0, mallWidth, mallHeight,
+            (x, y) => {
+                if (tiles.outside[x, y] != Tile.Floor) {
+                    if(PathfindingNodeManager.Instance.GetPathPoint(new Vector2(x,y)) == null) {
+                        SpawnObjectForMall(hallwayFloor, new Vector3(x, 0, y), Quaternion.identity, TexturePicker.Instance.OutsideFloorTextures());
+                        PathfindingNodeManager.Instance.AddNavPoint(new PathPoint(mallGenerator.hallNumber + 1, new Vector2(x, y), 2, PathfindNode.Outside));
+                        Debug.Log("k");
+                    }
+                }
+            }
+        );
+    }
+
     public void DebugCubes() {
         //Create cubes for debugging
         List<PathPoint> pl = PathfindingNodeManager.Instance.ReturnNavPointList();
         foreach (PathPoint p in pl) {
-            if (p.GetNode == PathfindNode.Walkable) {
+            if (p.GetNode == PathfindNode.Walkable || p.GetNode == PathfindNode.Outside) {
                 GameObject s = SpawnObjectForMall(debugBox,
                     new Vector3(p.GetPosition.x, 0, p.GetPosition.y),
                     Quaternion.LookRotation(new Vector3(0, 0, 1)),
                     TexturePicker.Instance.GetHallwayWallTexture());
                 s.GetComponent<Renderer>().sharedMaterial.color = new Color(0, 255, 0);
+                continue;
             }
 
             else if (p.GetNode == PathfindNode.Nonwalkable) {
@@ -139,6 +154,16 @@ public class ObjectSpawner : MonoBehaviour
                     Quaternion.LookRotation(new Vector3(0, 0, 1)),
                     TexturePicker.Instance.GetHallwayWallTexture());
                 s.GetComponent<Renderer>().sharedMaterial.color = new Color(255, 0, 0);
+                continue;
+            }
+            else if (p.GetNode == PathfindNode.Door) {
+                GameObject s = SpawnObjectForMall(debugBox,
+                    new Vector3(p.GetPosition.x, 0, p.GetPosition.y),
+                    Quaternion.LookRotation(new Vector3(0, 0, 1)),
+                    TexturePicker.Instance.GetHallwayWallTexture());
+                s.GetComponent<Renderer>().sharedMaterial.color = new Color(0, 0, 255);
+                continue;
+
             }
         }
     }

@@ -17,8 +17,9 @@ public class MallGeneratorEditor : Editor {
         if (GUILayout.Button("Generate Mall")) {
             mallGenerator.GenerateMall();
         }
-        if (GUILayout.Button("New Path")) {
-            mallGenerator.FindPathOnButtonPress();
+        if (GUILayout.Button("TO DO")) {
+            //mallGenerator.FindPathOnButtonPress();
+            Debug.Log("Make listner on the NavigationManager");
         }
 
     }

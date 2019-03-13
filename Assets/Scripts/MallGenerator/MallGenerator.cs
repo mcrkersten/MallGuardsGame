@@ -25,7 +25,7 @@ public class MallGenerator : MonoBehaviour
     }
 
     public bool spawnCubes;
-    public Pathfinding pathfinder;
+    public bool showPath;
 
     private Tiles tiles;
     private StoreFurnitureSpawner storeFurnitureSpawner;
@@ -35,6 +35,10 @@ public class MallGenerator : MonoBehaviour
     public float gridSize = 3;
     [HideInInspector]
     public int hallWidht = 3;
+
+    [HideInInspector]
+    public int hallNumber;
+
     [Header("Plaza dimensions")]
     public Vector2 plazaSize;
 
@@ -56,7 +60,6 @@ public class MallGenerator : MonoBehaviour
 
         storeFurnitureSpawner = StoreFurnitureSpawner.Instance;
         pathfindingNodeManager = PathfindingNodeManager.Instance;
-        pathfinder = new Pathfinding();
 
         tiles = Tiles.Instance;
         tiles.Init();
@@ -75,11 +78,13 @@ public class MallGenerator : MonoBehaviour
         Awake();
         ClearMall();
         tiles.Generate();
-        objectSpawner.Generate();
+        objectSpawner.GenerateMall();
         tiles.InitPathfindGrid();
-
-        //SpawnFurniture();
+        SpawnFurniture();
         tiles.SetPathfinderGridValues();
+
+        objectSpawner.SpawnOutside();
+
         pathfindingNodeManager.SetAllPathPointNeighbours();
 
         if (spawnCubes) {
@@ -123,47 +128,45 @@ public class MallGenerator : MonoBehaviour
         }
     }
 
-
-    public void FindPathOnButtonPress() {
-        List<PathPoint> listje = pathfindingNodeManager.ReturnNavPointList();
-        PathPoint toFind = listje[Random.Range(0, listje.Count)];
-        PathPoint start = listje[Random.Range(0, listje.Count)];
-        if(toFind.GetNode != PathfindNode.Nonwalkable && start.GetNode != PathfindNode.Nonwalkable) {
-            pathfinder.FindPath(start.GetPosition, toFind.GetPosition);
-        }
-        else {
-            FindPathOnButtonPress();
-        }
-    }
+    //public void FindPathOnButtonPress() {
+    //    List<PathPoint> listje = pathfindingNodeManager.ReturnNavPointList();
+    //    PathPoint toFind = listje[Random.Range(0, listje.Count)];
+    //    PathPoint start = listje[Random.Range(0, listje.Count)];
+    //    if(toFind.GetNode != PathfindNode.Nonwalkable && start.GetNode != PathfindNode.Nonwalkable) {
+    //        pathfinder.FindPath(start.GetPosition, toFind.GetPosition);
+    //    }
+    //    else {
+    //        FindPathOnButtonPress();
+    //    }
+    //}
 
     private void OnDrawGizmos() {
-        pathfindingNodeManager = PathfindingNodeManager.Instance;
-        if (pathfindingNodeManager.ReturnNavPointList().Count > 0)//If the grid is not empty
-        {
-            foreach (PathPoint n in pathfindingNodeManager.ReturnNavPointList())//Loop through every node in the grid
+        if (showPath) {
+            pathfindingNodeManager = PathfindingNodeManager.Instance;
+            if (pathfindingNodeManager.ReturnNavPointList().Count > 0)//If the grid is not empty
             {
-                if (n.GetNode == PathfindNode.Nonwalkable)//If the current node is a wall node
+                foreach (PathPoint n in pathfindingNodeManager.ReturnNavPointList())//Loop through every node in the grid
                 {
-                    Gizmos.color = Color.white;//Set the color of the node
-                }
-                else {
-                    Gizmos.color = Color.yellow;//Set the color of the node
-                }
-
-
-                if (pathfindingNodeManager.FinalPath != null)//If the final path is not empty
-                {
-                    if (pathfindingNodeManager.FinalPath.Contains(n))//If the current node is in the final path
+                    if (n.GetNode == PathfindNode.Nonwalkable)//If the current node is a wall node
                     {
-                        Gizmos.color = Color.red;//Set the color of that node
+                        Gizmos.color = Color.white;//Set the color of the node
+                    }
+                    else {
+                        Gizmos.color = Color.yellow;//Set the color of the node
                     }
 
+
+                    if (pathfindingNodeManager.FinalPath != null)//If the final path is not empty
+                    {
+                        if (pathfindingNodeManager.FinalPath.Contains(n))//If the current node is in the final path
+                        {
+                            Gizmos.color = Color.red;//Set the color of that node
+                        }
+
+                    }
+                    Gizmos.DrawCube(new Vector3(n.GetPosition.x, 0, n.GetPosition.y), new Vector3(.3f, .3f, .3f));//Draw the node at the position of the node.
                 }
-                Gizmos.DrawCube(new Vector3(n.GetPosition.x, 0, n.GetPosition.y), new Vector3(.3f, .3f, .3f));//Draw the node at the position of the node.
             }
         }
     }
 }
-
-
-

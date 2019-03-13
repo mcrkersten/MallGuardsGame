@@ -25,6 +25,7 @@ public class Tiles
     public List<Tile[,]> stores = new List<Tile[,]>();
     public Tile[,] hallways;
     public Tile[,] doors;
+    public Tile[,] outside;
     private MallGenerator mallGenerator;
     private PathfindingNodeManager pathfindingNodeManager;
     private List<MallSpace> hallwaySpaces = new List<MallSpace>();
@@ -65,6 +66,7 @@ public class Tiles
         stores = new List<Tile[,]>();
         hallways = new Tile[mallWidth, mallHeight];
         doors = new Tile[mallWidth, mallHeight];
+        outside = new Tile[mallWidth, mallHeight];
 
         storeSpaces = new List<MallSpace>();
         hallwaySpaces = new List<MallSpace>();
@@ -294,21 +296,25 @@ public class Tiles
         //X-horizotal right
         if (hallways[(int)hallwaysize[0], (int)hallwaySpaces[0].GetMiddleOfRoom.y] != Tile.Floor) {
             hallways[(int)hallwaysize[0] - 1, (int)hallwaySpaces[0].GetMiddleOfRoom.y] = Tile.Door;
+            doors[(int)hallwaysize[0] - 1, (int)hallwaySpaces[0].GetMiddleOfRoom.y] = Tile.Door;
         }
 
         //X-horizotal left
         if (hallways[(int)hallwaysize[3] - 1, (int)hallwaySpaces[0].GetMiddleOfRoom.y] != Tile.Floor) {
             hallways[(int)hallwaysize[3], (int)hallwaySpaces[0].GetMiddleOfRoom.y] = Tile.Door;
+            doors[(int)hallwaysize[3], (int)hallwaySpaces[0].GetMiddleOfRoom.y] = Tile.Door;
         }
 
         //X-vertical top
         if (hallways[(int)hallwaySpaces[0].GetMiddleOfRoom.x, (((int)hallwaysize[1] + 1) + ((int)hallwaySpaces[0].GetMiddleOfRoom.y + 1))] != Tile.Floor) {
             hallways[(int)hallwaySpaces[0].GetMiddleOfRoom.x, (((int)hallwaysize[1]) + ((int)hallwaySpaces[0].GetMiddleOfRoom.y + 1))] = Tile.Door;
+            doors[(int)hallwaySpaces[0].GetMiddleOfRoom.x, (((int)hallwaysize[1]) + ((int)hallwaySpaces[0].GetMiddleOfRoom.y + 1))] = Tile.Door;
         }
 
         //X-vertical down
         if (hallways[(int)hallwaySpaces[0].GetMiddleOfRoom.x, ((int)hallwaySpaces[0].GetMiddleOfRoom.y - 1) - ((int)hallwaysize[2] + 1)] != Tile.Floor) {
             hallways[(int)hallwaySpaces[0].GetMiddleOfRoom.x, ((int)hallwaySpaces[0].GetMiddleOfRoom.y - 1) - (int)hallwaysize[2]] = Tile.Door;
+            doors[(int)hallwaySpaces[0].GetMiddleOfRoom.x, ((int)hallwaySpaces[0].GetMiddleOfRoom.y - 1) - (int)hallwaysize[2]] = Tile.Door;
         }
     }
 
@@ -328,10 +334,8 @@ public class Tiles
                         if (doors[(int)x.x, (int)x.y] == Tile.Door) {
                             pathfindingNodeManager.AddNavPoint(new PathPoint(roomNumber, new Vector2(position[0], position[1]), 1, PathfindNode.Door));
                         }
-                        else {
-                            if(stores[roomNumber][(int)x.x, (int)x.y] != Tile.None) {
-                                pathfindingNodeManager.AddNavPoint(new PathPoint(roomNumber, new Vector2(position[0], position[1]), 1, PathfindNode.Walkable));
-                            }
+                        else if(stores[roomNumber][(int)x.x, (int)x.y] != Tile.None) {
+                            pathfindingNodeManager.AddNavPoint(new PathPoint(roomNumber, new Vector2(position[0], position[1]), 1, PathfindNode.Walkable));
                         }
                         position[0] += gridPercentage;
                     }
@@ -341,7 +345,7 @@ public class Tiles
             }
             roomNumber++;
         }
-
+        mallGenerator.hallNumber = roomNumber;
         //Hallways and plaza
         foreach (MallSpace i in hallwaySpaces) {
             PathPoint existTester;
@@ -374,54 +378,88 @@ public class Tiles
         Vector2 pointPosition;
 
         foreach (PathPoint pnt in points) {
-            pointPosition = pnt.GetPosition;
-            if(pnt.GetNode == PathfindNode.Door) {
-                pnt.SetNode = PathfindNode.Walkable;
-                continue;
-            }
+            if (pnt.GetNode != PathfindNode.Outside) {
 
-            if (pnt == null) {
-                continue;
-            }
-
-            pointPosition = pnt.GetPosition;
-
-            float xx = pointPosition.x;
-            float yy = pointPosition.y;
-            float gridStepSize = 1 / gridSize;
-
-            xx -= gridStepSize;
-            yy -= gridStepSize;
-
-            for(int x = 0; x < gridSize; x++) {
-                for (int y = 0; y < gridSize; y++) {
-                    neighbour = pathfindingNodeManager.GetPathPoint(new Vector2(xx, yy));
-                    if(neighbour == null) {
-                        pnt.SetNode = PathfindNode.Nonwalkable;
-                    }
-                    else if (neighbour.GetNode == PathfindNode.None || neighbour.GetStoreNumber != pnt.GetStoreNumber) {
-                        pnt.SetNode = PathfindNode.Nonwalkable;
-                    }
-                    yy += gridStepSize;
+                if (pnt.GetNode == PathfindNode.Door) {
+                    //pnt.SetNode = PathfindNode.Walkable;
+                    continue;
                 }
-                xx += gridStepSize;
 
-                yy = pointPosition.y;
+                if (pnt == null) {
+                    continue;
+                }
+
+                pointPosition = pnt.GetPosition;
+
+                float xx = pointPosition.x;
+                float yy = pointPosition.y;
+                float gridStepSize = 1 / gridSize;
+
+                xx -= gridStepSize;
                 yy -= gridStepSize;
+
+                for (int x = 0; x < gridSize; x++) {
+                    for (int y = 0; y < gridSize; y++) {
+                        neighbour = pathfindingNodeManager.GetPathPoint(new Vector2(xx, yy));
+                        if (neighbour == null) {
+                            pnt.SetNode = PathfindNode.Nonwalkable;
+                        }
+                        else if (neighbour.GetNode == PathfindNode.None || neighbour.GetStoreNumber != pnt.GetStoreNumber) {
+                            pnt.SetNode = PathfindNode.Nonwalkable;
+                        }
+                        yy += gridStepSize;
+                    }
+                    xx += gridStepSize;
+
+                    yy = pointPosition.y;
+                    yy -= gridStepSize;
+                }
+            }
+
+            else if(pnt.GetNode == PathfindNode.Outside) {
+                if (pnt == null) {
+                    continue;
+                }
+
+                pointPosition = pnt.GetPosition;
+                float xx = pointPosition.x;
+                float yy = pointPosition.y;
+
+                xx -= 1;
+                yy -= 1;
+
+                for (int x = 0; x < 2; x++) {
+                    for (int y = 0; y < 2; y++) {
+                        neighbour = pathfindingNodeManager.GetPathPoint(new Vector2(xx, yy));
+                        if (neighbour == null) {
+                            pnt.SetNode = PathfindNode.Nonwalkable;
+                        }
+                        else if (neighbour.GetNode == PathfindNode.None || neighbour.GetStoreNumber != pnt.GetStoreNumber) {
+                            pnt.SetNode = PathfindNode.Nonwalkable;
+                        }
+                        yy += 1;
+                    }
+                    xx += 1;
+
+                    yy = pointPosition.y;
+                    yy -= 1;
+                }
             }
         }
     }
+    
 
-        public void DoActionForPartOfGrid(int x, int y, int w, int h, System.Action<int, int> action) {
+   public void DoActionForPartOfGrid(int x, int y, int w, int h, System.Action<int, int> action) {
         for (int xx = x; xx < x + w; xx++) {
             for (int yy = y; yy < y + h; yy++) {
                 if (xx < 0 || yy < 0 || xx >= mallWidth || yy >= mallHeight) {
                     continue;
                 }
+                outside[xx, yy] = Tile.Floor;
                 action.Invoke(xx, yy);
             }
         }
-    }
+   }
 
     private List<Vector2> GetPlazaGrid(MallSpace plaza, bool isStore, int roomNumber) {
         List<Vector2> list = new List<Vector2>();
