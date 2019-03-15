@@ -7,6 +7,11 @@ public class NavigationManager : MonoBehaviour
     private List<QueueObject> queue = new List<QueueObject>();
     private Pathfinding pathfinding;
 
+    private void InitListners()
+    {
+        NPC_Object.OnNavigaitonCall += AddToQueue;
+    }
+
     private void Awake() {
         pathfinding = Pathfinding.Instance;
     }

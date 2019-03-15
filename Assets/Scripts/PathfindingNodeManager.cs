@@ -20,6 +20,7 @@ public class PathfindingNodeManager {
 
     PathfindingNodeManager() {
         mallGenerator = MallGenerator.Instance;
+        NPC_Object.WhatIsMyClosestNavPoint += FindClosestPathPoint;
     }
 
     private List<PathPoint> allPathPoints = new List<PathPoint>();
@@ -51,6 +52,26 @@ public class PathfindingNodeManager {
 
     public List<PathPoint> ReturnNavPointList() {
         return allPathPoints;
+    }
+
+    public void FindClosestPathPoint(GameObject NPC)
+    {
+        Vector3 roundedPos = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
+
+        float minDist = float.PositiveInfinity;
+        Node closestNode = null;
+        for (int i = 0; i < gridLength; i++)
+        {
+            for (int j = 0; j < gridWidth; j++)
+            {
+                float sqrDist = (grid[i, j].pos - roundedPos).sqrMagnitude;
+                if (sqrDist < minDist)
+                {
+                    minDist = sqrDist;
+                    closestNode = grid[i, j];
+                }
+            }
+        }
     }
 
     public void Clear() {

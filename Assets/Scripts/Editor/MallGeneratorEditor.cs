@@ -21,6 +21,5 @@ public class MallGeneratorEditor : Editor {
             //mallGenerator.FindPathOnButtonPress();
             Debug.Log("Make listner on the NavigationManager");
         }
-
     }
 }
